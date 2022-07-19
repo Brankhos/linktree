@@ -86,7 +86,7 @@ function merge_svgs(svg_list) {
                 for (const [key, value] of Object.entries(step_dict)) {
 
                     //var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"][1][key]}");\nanimation: ${key} 2s linear infinite;\n}`
-                    var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"][1][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
+                    var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"]["01"][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
 
                     $("head").append(`<style id='${splitted[0]}-${key}-css' type='text/css'> ` + inside_key + " </style>");
 
@@ -148,8 +148,7 @@ function merge_svgs(svg_list) {
             });
 
             for (const [key, value] of Object.entries(lookup_dict)) {
-
-                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["lookup"][1][key]}");\nanimation: ${key}-lookup ${timed2}s linear forwards;\n}`
+                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["lookup"]["01"][key]}");\nanimation: ${key}-lookup ${timed2}s linear forwards;\n}`
 
                 $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
 
@@ -178,7 +177,7 @@ function merge_svgs(svg_list) {
         })
         .on("mouseleave", async function () {
             var default_dict = {}
-            for (const [key, value] of Object.entries(animated_dict[splitted2[0]]["step"][1])) {
+            for (const [key, value] of Object.entries(animated_dict[splitted2[0]]["step"]["01"])) {
                 if (!default_dict.hasOwnProperty(key)) {
                     default_dict[key] = [value]
                 } else {
@@ -193,7 +192,7 @@ function merge_svgs(svg_list) {
 
             for (const [key, value] of Object.entries(default_dict)) {
 
-                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"][1][key]}");\nanimation: ${key}-lookdown ${timed2}s linear forwards;\n}`
+                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"]["01"][key]}");\nanimation: ${key}-lookdown ${timed2}s linear forwards;\n}`
 
                 $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
 
@@ -234,7 +233,7 @@ function merge_svgs(svg_list) {
                     if (list_of_current_animations.every(element => element)) {
                         for (const [key, value] of Object.entries(default_dict)) {
 
-                            var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"][1][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
+                            var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"]["01"][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
 
                             $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
                             $(".grass").css("animation-play-state", "running");
@@ -271,6 +270,7 @@ $.ajax({
             }
         });
         var empty_bg = []
+
         for (const [key, value] of Object.entries(background_array)) {
             if (key == "grass") {
                 $(".grass").css("background-image", `url(${value[Math.floor(Math.random() * value.length)]})`)
@@ -280,7 +280,6 @@ $.ajax({
         }
         var dict_keys = Object.keys(background_weather_color)
         var selected_random_weather = background_weather_color[dict_keys[Math.floor(Math.random() * dict_keys.length)]]
-        console.log(selected_random_weather);
         $(".background-inner").css("background-image", empty_bg.join(","))
         $(".background-out").css("background-image", `${selected_random_weather[0]}`)
         $(".background-out").css("filter", `${selected_random_weather[1]}`)
@@ -288,6 +287,5 @@ $.ajax({
 
     }
 });
-console.log(background_array);
 
 
