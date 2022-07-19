@@ -11,7 +11,7 @@ body {
 
 @font-face {
     font-family: "bamboo";
-    src: url("./assets/fonts/Bamboo.ttf"), format(‘truetype’);
+    src: url("./assets/fonts/Bamboo.ttf") format(‘truetype’);
     font-weight: normal;
     font-style: normal;
 }
@@ -31,17 +31,16 @@ body {
 
 
 .background-inner {
-    background-image: url("./assets/svg/backgrounds/2_soil_1.svg");
+    background-image: url("./assets/svg/backgrounds/3_soil_1.png");
     background-repeat: repeat-x;
-    background-position: 0 105%, 0 80%, 0 30%;
+    background-position: 0 105%, 0 105%, 0 80%, 0 30%;
     background-size: auto;
     animation: 55s html-bg infinite linear;
-
 }
 
 @keyframes html-bg {
     100% {
-        background-position: -5000px 105%, -4000px 80%, -3500px 30%;
+        background-position: -5000px 105%, -5000px 105%, -4000px 80%, -3500px 30%;
     }
 }
 
@@ -71,11 +70,12 @@ svg#panda~.grass {
     width: 100%;
     height: 50px;
     bottom: 0;
-    background-image: url("./assets/svg/backgrounds/1_grass_1.svg");
+    background-image: url("./assets/svg/backgrounds/1_grass_1.png");
     background-repeat: repeat-x;
     background-position: 0 20%;
     background-size: contain;
     animation: 50s grass infinite linear;
+
 
 }
 

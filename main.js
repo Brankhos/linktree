@@ -86,7 +86,7 @@ function merge_svgs(svg_list) {
                 for (const [key, value] of Object.entries(step_dict)) {
 
                     //var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"][1][key]}");\nanimation: ${key} 2s linear infinite;\n}`
-                    var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"]["01"][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
+                    var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted[0]]["default"][1][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
 
                     $("head").append(`<style id='${splitted[0]}-${key}-css' type='text/css'> ` + inside_key + " </style>");
 
@@ -148,7 +148,7 @@ function merge_svgs(svg_list) {
             });
 
             for (const [key, value] of Object.entries(lookup_dict)) {
-                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["lookup"]["01"][key]}");\nanimation: ${key}-lookup ${timed2}s linear forwards;\n}`
+                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["lookup"][1][key]}");\nanimation: ${key}-lookup ${timed2}s linear forwards;\n}`
 
                 $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
 
@@ -177,7 +177,7 @@ function merge_svgs(svg_list) {
         })
         .on("mouseleave", async function () {
             var default_dict = {}
-            for (const [key, value] of Object.entries(animated_dict[splitted2[0]]["step"]["01"])) {
+            for (const [key, value] of Object.entries(animated_dict[splitted2[0]]["step"][1])) {
                 if (!default_dict.hasOwnProperty(key)) {
                     default_dict[key] = [value]
                 } else {
@@ -192,7 +192,7 @@ function merge_svgs(svg_list) {
 
             for (const [key, value] of Object.entries(default_dict)) {
 
-                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"]["01"][key]}");\nanimation: ${key}-lookdown ${timed2}s linear forwards;\n}`
+                var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"][1][key]}");\nanimation: ${key}-lookdown ${timed2}s linear forwards;\n}`
 
                 $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
 
@@ -233,7 +233,7 @@ function merge_svgs(svg_list) {
                     if (list_of_current_animations.every(element => element)) {
                         for (const [key, value] of Object.entries(default_dict)) {
 
-                            var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"]["01"][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
+                            var inside_key = `\n#${key} {\nd:path("${animated_dict[splitted2[0]]["step"][1][key]}");\nanimation: ${key} ${timed}s linear infinite;\n}`
 
                             $("head" + ` #${splitted2[0]}-${key}-css`).html(inside_key);
                             $(".grass").css("animation-play-state", "running");
@@ -250,42 +250,67 @@ function merge_svgs(svg_list) {
 const sleepNow = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 
+const symbols = /[\r\n%#()<>?[\\\]^`{|}]/g;
+function encodeSVG(data) {
+    // Use single quotes instead of double to avoid encoding.
+    data = data.replace(/"/g, `'`);
+
+    data = data.replace(/>\s{1,}</g, `><`);
+    data = data.replace(/\s{2,}/g, ` `);
+
+    // Using encodeURIComponent() as replacement function
+    // allows to keep result code readable
+    return data.replace(symbols, encodeURIComponent);
+}
+
 
 /*  Background settings  */
 const background_locations = "./assets/svg/backgrounds/"
 var background_array = {}
 const background_weather_color = { clear: ["linear-gradient(#6dc6f2 0%, #c3e7fd 50%)", "none"], sunrise: ["linear-gradient(#c93b25 0%, #ffc749 50%)", "saturate(116%) contrast(169%)"], suprize: ["linear-gradient(#191a2e 0%, #ae7885 50%)", "none"] }
+// const background_inner = { "background-position": { "norm": ["0 105%", "0 105%", "0 80%", " 0 30%"], "keyframe": ["-5000px 105%", "-5000px 105%", " -4000px 80%", "-3500px 30%"] } }
 
 
-$.ajax({
-    url: background_locations,
-    success: function (data) {
-        $(data).find("td > a").each(function () {
-            if (openFile($(this).attr("href"), "svg")) {
-                var split_it = $(this).attr("href").split("_")[1]
-                if (!background_array.hasOwnProperty(split_it)) {
-                    background_array[split_it] = []
+$.get("./assets/svg/bamboo.svg", function (data) {
+    var result = data;
+    var window_width = $(window).width()
+    $(result).find("svg").attr("width", window_width + "px")
+    var encodedData = "data:image/svg+xml," + encodeSVG(new XMLSerializer().serializeToString(result));
+    background_array["bamboo"] = ["\"" + encodedData + "\""]
+
+    $.ajax({
+        url: background_locations,
+        success: function (data) {
+            $(data).find("td > a").each(function () {
+                if (openFile($(this).attr("href"), "svg")) {
+                    var split_it = $(this).attr("href").split("_")[1]
+                    if (!background_array.hasOwnProperty(split_it)) {
+                        background_array[split_it] = []
+                    }
+                    background_array[split_it].push(background_locations + $(this).attr("href"));
                 }
-                background_array[split_it].push(background_locations + $(this).attr("href"));
+            });
+            console.log(background_array);
+            var empty_bg = []
+            console.log(background_array);
+            for (const [key, value] of Object.entries(background_array)) {
+                if (key == "grass") {
+                    $(".grass").css("background-image", `url(${value[Math.floor(Math.random() * value.length)]})`)
+                } else {
+                    empty_bg.push(`url(${value[Math.floor(Math.random() * value.length)]})`)
+                }
             }
-        });
-        var empty_bg = []
-
-        for (const [key, value] of Object.entries(background_array)) {
-            if (key == "grass") {
-                $(".grass").css("background-image", `url(${value[Math.floor(Math.random() * value.length)]})`)
-            } else {
-                empty_bg.push(`url(${value[Math.floor(Math.random() * value.length)]})`)
-            }
+            var dict_keys = Object.keys(background_weather_color)
+            var selected_random_weather = background_weather_color[dict_keys[Math.floor(Math.random() * dict_keys.length)]]
+            console.log(empty_bg);
+            $(".background-inner").css("background-image", empty_bg.join(","))
+            $(".background-out").css("background-image", `${selected_random_weather[0]}`)
+            $(".background-out").css("filter", `${selected_random_weather[1]}`)
         }
-        var dict_keys = Object.keys(background_weather_color)
-        var selected_random_weather = background_weather_color[dict_keys[Math.floor(Math.random() * dict_keys.length)]]
-        $(".background-inner").css("background-image", empty_bg.join(","))
-        $(".background-out").css("background-image", `${selected_random_weather[0]}`)
-        $(".background-out").css("filter", `${selected_random_weather[1]}`)
+    })
+})
 
 
-    }
-});
+
 
 
