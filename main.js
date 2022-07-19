@@ -267,7 +267,7 @@ function encodeSVG(data) {
 /*  Background settings  */
 const background_locations = "./assets/svg/backgrounds/"
 var background_array = {}
-const background_weather_color = { clear: ["linear-gradient(#6dc6f2 0%, #c3e7fd 50%)", "none"], sunrise: ["linear-gradient(#c93b25 0%, #ffc749 50%)", "saturate(116%) contrast(169%)"], suprize: ["linear-gradient(#191a2e 0%, #ae7885 50%)", "none"] }
+const background_weather_color = { clear: ["linear-gradient(#6dc6f2 0%, #c3e7fd 50%)", "none"], sunrise: ["linear-gradient(rgb(183 173 65) 0%, rgb(92 169 67) 50%)", "hue-rotate(300deg) saturate(116%)"], suprize: ["linear-gradient(#191a2e 0%, #ae7885 50%)", "none"] }
 // const background_inner = { "background-position": { "norm": ["0 105%", "0 105%", "0 80%", " 0 30%"], "keyframe": ["-5000px 105%", "-5000px 105%", " -4000px 80%", "-3500px 30%"] } }
 
 

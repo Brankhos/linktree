@@ -33,14 +33,14 @@ body {
 .background-inner {
     background-image: url("./assets/svg/backgrounds/3_soil_1.png");
     background-repeat: repeat-x;
-    background-position: 0 105%, 0 105%, 0 80%, 0 30%;
+    background-position: 0 105%, 0 105%, 0 83%, 0 30%;
     background-size: auto;
     animation: 55s html-bg infinite linear;
 }
 
 @keyframes html-bg {
     100% {
-        background-position: -5000px 105%, -5000px 105%, -4000px 80%, -3500px 30%;
+        background-position: -5000px 105%, -5000px 105%, -4000px 83%, -3500px 30%;
     }
 }
 
